@@ -5,6 +5,7 @@ import http from 'http';
 import router from './routes/index.js';
 import dotenv from 'dotenv';
 import discordClient from './discordApp.js';
+import obs from './obsApp.js';
 dotenv.config();
 
 const PORT = process.env.PORT || 80;
