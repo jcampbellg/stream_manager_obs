@@ -115,6 +115,18 @@ discordClient.on('messageCreate', message => {
       voiceConnection = null;
     }
   }
+
+  if (message.content === '!tts prev') {
+    if (voiceConnection) {
+      message.react('✅');
+      const resource = createAudioResource('./call.wav', {
+        inputType: StreamType.Arbitrary
+      });
+
+      player.play(resource);
+      voiceConnection.subscribe(player);
+    }
+  }
 });
 
 export const playTTSCall = (call) => {
