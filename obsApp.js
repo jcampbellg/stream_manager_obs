@@ -5,19 +5,22 @@ const obs = new OBSWebSocket();
 obs.on('ConnectionOpened', () => {
   console.log('Connection Opened');
 
-  // Send some requests.
-  obs.sendCallback('GetSceneList', {}, (err, data) => {
-    console.log('Using callbacks:', err, data);
-  });
+  // obs.sendCallback('GetSceneList', {}, (err, data) => {
+  //   console.log('Using callbacks:', err, data);
+  // });
 
-  obs.send('GetSceneList').then(data => {
-    console.log('Using promises:', data);
-  });
+  // obs.send('GetSceneList').then(data => {
+  //   console.log('Using promises:', data);
+  // });
+
+  obs.send('SetVolume', { source: 'MIC', volume: 0});
+  obs.send('SetVolume', { source: 'Desktop', volume: 0});
+  obs.send('SetCurrentScene', {'scene-name': 'Starting' }).catch(err => { console.log(err); });
 });
 
-obs.on('SwitchScenes', data => {
-  console.log('SwitchScenes', data);
-});
+// obs.on('SwitchScenes', data => {
+//   console.log('SwitchScenes', data);
+// });
 
 obs.connect();
 

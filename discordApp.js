@@ -3,6 +3,7 @@ import { Client, Intents } from 'discord.js'
 import { joinVoiceChannel, createAudioResource, StreamType, createAudioPlayer } from '@discordjs/voice';
 import dotenv from 'dotenv';
 import say from 'say';
+import obs from './obsApp.js';
 dotenv.config();
 
 const authUrl = `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.WEBHOOK_URL}/token&scope=channel:manage:predictions+channel:manage:polls+channel:read:polls+bits:read+channel:read:subscriptions+channel_subscriptions+user:edit+chat:read+chat:edit+channel:moderate+moderation:read+whispers:edit+whispers:read+channel:manage:redemptions+channel:read:redemptions+channel:edit:commercial+channel_commercial+channel:manage:broadcast+channel_editor+user:edit:broadcast+clips:edit`;
@@ -64,12 +65,23 @@ discordClient.on('messageCreate', message => {
       });
     }
 
-    
-
     if (message.content.startsWith('`[14/14]') && message.author.bot) {
       discordClient.channels.fetch(process.env.NOTIFICATION_CHANNEL).then(channel => {
         channel.send('¡Listo para empezar el stream! ✅');
       });
+    }
+
+    if (message.content === '!scene live') {
+      obs.send('SetCurrentScene', {'scene-name': 'Live' });
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Sounds', filterName: 'Desktop', filterEnabled: true});
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Sounds', filterName: 'MIC', filterEnabled: true});
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Face Cam Chat', filterEnabled: true});
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Chat Show', filterEnabled: true});
+    }
+
+    if (message.content === '!scene chat') {
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Face Cam Chat', filterEnabled: true});
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Chat Show', filterEnabled: true});
     }
   }
 
