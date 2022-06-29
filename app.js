@@ -29,11 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // API ROUTES
-// app.use('/', router);
-// define the first route
-app.get("/", function (req, res) {
-  res.send("<h1>Hello World!</h1>")
-});
+app.use('/', router);
 
 // SERVER
 app.set('port', PORT);
