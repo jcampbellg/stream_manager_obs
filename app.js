@@ -30,9 +30,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // API ROUTES
-// router.get('/', (req, res, next) => {
-//   res.json({message: 'Hi'});
-// });
 app.use('/', router);
 
 // SERVER

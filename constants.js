@@ -34,6 +34,23 @@ export const homeHtml = `
   </html>
 `;
 
+export const TWITCH_EVENT = {
+  SUBSCRIPTION_MESSAGE: 'channel.subscription.message',
+  SUBSCRIBE: 'channel.subscribe',
+  FOLLOW: 'channel.follow',
+  REDEMPTION: 'channel.channel_points_custom_reward_redemption.add',
+  SUBSCRIPTION_GIF: 'channel.subscription.gift',
+  CHEER: 'channel.cheer',
+  RAID: 'channel.raid',
+  POLL_BEGIN: 'channel.poll.begin',
+  POLL_PROGRESS: 'channel.poll.progress',
+  POLL_END: 'channel.poll.end',
+  PREDICTION_BEGIN: 'channel.prediction.begin',
+  PREDICTION_PROGRESS: 'channel.prediction.progress',
+  PREDICTION_LOCK: 'channel.prediction.lock',
+  PREDICTION_END: 'channel.prediction.end',
+};
+
 export const events = [
   {type: 'channel.subscription.message', condition: {'broadcaster_user_id': process.env.CHANNEL_ID}},
   {type: 'channel.subscribe', condition: {'broadcaster_user_id': process.env.CHANNEL_ID}},

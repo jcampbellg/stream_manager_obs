@@ -2,6 +2,7 @@ import request from 'request';
 import { Client, Intents } from 'discord.js'
 import { joinVoiceChannel, createAudioResource, StreamType, createAudioPlayer } from '@discordjs/voice';
 import dotenv from 'dotenv';
+import say from 'say';
 dotenv.config();
 
 const authUrl = `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.WEBHOOK_URL}/token&scope=channel:manage:predictions+channel:manage:polls+channel:read:polls+bits:read+channel:read:subscriptions+channel_subscriptions+user:edit+chat:read+chat:edit+channel:moderate+moderation:read+whispers:edit+whispers:read+channel:manage:redemptions+channel:read:redemptions+channel:edit:commercial+channel_commercial+channel:manage:broadcast+channel_editor+user:edit:broadcast+clips:edit`;
@@ -39,7 +40,7 @@ discordClient.on('messageCreate', message => {
           message.channel.send('Error al iniciar sesión.');
         }
         message.react('✅');
-        message.channel.send('`⏲ Subcribiendo los eventos...`');
+        message.channel.send('`⏲ Subscribiendo los eventos...`');
 
         request.get({url: process.env.WEBHOOK_URL+'/eventsub'}, (err, res) => {
           if (err) {
@@ -62,6 +63,19 @@ discordClient.on('messageCreate', message => {
         });
       });
     }
+
+    
+
+    if (message.content.startsWith('`[14/14]') && message.author.bot) {
+      discordClient.channels.fetch(process.env.NOTIFICATION_CHANNEL).then(channel => {
+        channel.send('¡Listo para empezar el stream! ✅');
+      });
+    }
+  }
+
+  if (message.content === '!limpiar' && (message.channelId === process.env.COMMAND_CHANNEL || message.channelId === process.env.NOTIFICATION_CHANNEL)) {
+    message.channel.bulkDelete(100).then(() => {
+    });
   }
 
   if (message.content === '!tts on') {
@@ -98,8 +112,26 @@ discordClient.on('messageCreate', message => {
       message.react('✅');
       player.stop();
       voiceConnection.disconnect();
+      voiceConnection = null;
     }
   }
 });
+
+export const playTTSCall = (call) => {
+  say.export(call, 'Microsoft Sabina Desktop', 1, 'call.wav', (err) => {
+    if (err) {
+      console.log(err);
+    }
+    // Play sound
+    if (voiceConnection) {
+      const resource = createAudioResource('./call.wav', {
+        inputType: StreamType.Arbitrary
+      });
+
+      player.play(resource);
+      voiceConnection.subscribe(player);
+    }
+  });
+}
 
 export default discordClient;
