@@ -4,7 +4,7 @@ import { homeHtml } from '../constants.js';
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-  res.send(homeHtml);
+  res.json({message: 'Hi'});
 });
 
 import tokenController from './token/tokenController.js';
