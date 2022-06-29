@@ -1,5 +1,4 @@
 import express from 'express';
-import { homeHtml } from '../constants.js';
 
 const router = express.Router();
 
