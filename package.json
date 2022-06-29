@@ -6,7 +6,8 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "ngrok": "ngrok http 80"
   },
   "repository": "git@github.com:jcampbellg/stream_manager_obs.git",
   "author": "jcampbellg",
