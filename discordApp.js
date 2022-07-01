@@ -2,7 +2,7 @@ import request from 'request';
 import { Client, Intents } from 'discord.js'
 import { joinVoiceChannel, createAudioResource, StreamType, createAudioPlayer } from '@discordjs/voice';
 import dotenv from 'dotenv';
-import say from 'say';
+import gtts from 'node-gtts';
 import obs from './obsApp.js';
 dotenv.config();
 
@@ -73,15 +73,15 @@ discordClient.on('messageCreate', message => {
 
     if (message.content === '!scene live') {
       obs.send('SetCurrentScene', {'scene-name': 'Live' });
-      obs.send('SetSourceFilterVisibility', { sourceName: 'Sounds', filterName: 'Desktop', filterEnabled: true});
-      obs.send('SetSourceFilterVisibility', { sourceName: 'Sounds', filterName: 'MIC', filterEnabled: true});
-      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Face Cam Chat', filterEnabled: true});
-      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Chat Show', filterEnabled: true});
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Sounds', filterName: 'Desktop', filterEnabled: true}).catch(err => console.log(err));
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Sounds', filterName: 'MIC', filterEnabled: true}).catch(err => console.log(err));
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Face Cam Chat', filterEnabled: true}).catch(err => console.log(err));
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Chat Show', filterEnabled: true}).catch(err => console.log(err));
     }
 
     if (message.content === '!scene chat') {
-      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Face Cam Chat', filterEnabled: true});
-      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Chat Show', filterEnabled: true});
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Face Cam Chat', filterEnabled: true}).catch(err => console.log(err));
+      obs.send('SetSourceFilterVisibility', { sourceName: 'Live', filterName: 'Chat Show', filterEnabled: true}).catch(err => console.log(err));
     }
   }
 
@@ -142,20 +142,21 @@ discordClient.on('messageCreate', message => {
 });
 
 export const playTTSCall = (call) => {
-  say.export(call, 'Microsoft Sabina Desktop', 1, 'call.wav', (err) => {
-    if (err) {
-      console.log(err);
-    }
-    // Play sound
-    if (voiceConnection) {
-      const resource = createAudioResource('./call.wav', {
-        inputType: StreamType.Arbitrary
-      });
+  try {
+    gtts('es').save('./call.wav', call, (err) => {
+      // Play sound
+      if (voiceConnection) {
+        const resource = createAudioResource('./call.wav', {
+          inputType: StreamType.Arbitrary
+        });
 
-      player.play(resource);
-      voiceConnection.subscribe(player);
-    }
-  });
+        player.play(resource);
+        voiceConnection.subscribe(player);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export default discordClient;

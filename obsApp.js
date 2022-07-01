@@ -13,8 +13,8 @@ obs.on('ConnectionOpened', () => {
   //   console.log('Using promises:', data);
   // });
 
-  obs.send('SetVolume', { source: 'MIC', volume: 0});
-  obs.send('SetVolume', { source: 'Desktop', volume: 0});
+  obs.send('SetVolume', { source: 'MIC', volume: 0}).catch(err => console.log(err));
+  obs.send('SetVolume', { source: 'Desktop', volume: 0}).catch(err => console.log(err));
   obs.send('SetCurrentScene', {'scene-name': 'Starting' }).catch(err => { console.log(err); });
 });
 
@@ -22,6 +22,8 @@ obs.on('ConnectionOpened', () => {
 //   console.log('SwitchScenes', data);
 // });
 
-obs.connect();
+obs.connect().catch(err => {
+  console.log('OBS Connection failed:', err);
+});
 
 export default obs;
